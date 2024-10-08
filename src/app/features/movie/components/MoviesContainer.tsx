@@ -1,5 +1,5 @@
 "use client"
-import { use } from "react"
+import { use, useMemo } from "react"
 import { useDebounce } from "use-debounce"
 
 import { Button } from "@/app/components/ui"
@@ -12,11 +12,17 @@ import { MovieCardGrid } from "./MovieCardGrid"
 import { MovieCardSkeleton } from "./MovieCardSkeleton"
 
 export const MoviesContainer = () => {
+  const defaultSearch = "marvel"
   const { search } = use(SearchContext)
   const [debouncedSearch] = useDebounce(search, 1000)
 
+  const effectiveSearch = useMemo(() => {
+    return debouncedSearch.trim() || defaultSearch
+  }, [debouncedSearch])
+
   const { data, isLoading, fetchNextPage, hasNextPage } =
-    useSearchMovies(debouncedSearch)
+    useSearchMovies(effectiveSearch)
+
   if (isLoading) {
     return (
       <MovieCardGrid>
