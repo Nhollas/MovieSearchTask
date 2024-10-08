@@ -1,26 +1,15 @@
 import Link from "next/link"
-import { forwardRef } from "react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui"
-import { cn } from "@/app/lib/utils"
 
 import { Movie } from "../types"
 
 import { MovieCardPoster } from "./MovieCardPoster"
 
-export const MovieCard = forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    movie: Movie
-  }
->(({ className, movie, ...props }, ref) => (
-  <Card
-    ref={ref}
-    className={cn("flex flex-col bg-secondary", className)}
-    {...props}
-  >
+export const MovieCard = ({ movie }: { movie: Movie }) => (
+  <Card className="flex flex-col bg-secondary">
     <Link href={`/movie/${movie.id}`}>
-      <CardHeader className="p-2">
+      <CardHeader className="flex items-center p-2">
         <MovieCardPoster title={movie.title} posterPath={movie.poster_path} />
       </CardHeader>
       <CardContent className="p-2">
@@ -30,6 +19,4 @@ export const MovieCard = forwardRef<
       </CardContent>
     </Link>
   </Card>
-))
-
-MovieCard.displayName = "MovieCard"
+)

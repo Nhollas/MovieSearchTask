@@ -1,13 +1,10 @@
 import { Page, Route, test as base } from "@playwright/test"
 import { type SetupServer } from "msw/node"
 
-import { env } from "@/app/lib/env"
 import { server } from "test/server"
 
 import { setupNextServer } from "../setup"
 import { buildLocalUrl, createTestUtils } from "../utils"
-
-const { REVALIDATE_SECRET } = env
 
 export const test = base.extend<{
   utils: ReturnType<typeof createTestUtils>
@@ -56,12 +53,7 @@ export const test = base.extend<{
   ],
   revalidatePath: async ({ port }, use) => {
     async function revalidatePath(page: Page, path: string) {
-      await page.goto(
-        buildLocalUrl(
-          port,
-          `/api/revalidatePath?secret=${REVALIDATE_SECRET}&path=${path}`,
-        ),
-      )
+      await page.goto(buildLocalUrl(port, `/api/revalidatePath?path=${path}`))
     }
 
     await use(revalidatePath)

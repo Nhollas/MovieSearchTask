@@ -14,6 +14,7 @@ import { MovieCardSkeleton } from "./MovieCardSkeleton"
 export const MoviesContainer = () => {
   const { search } = use(SearchContext)
   const [debouncedSearch] = useDebounce(search, 1000)
+
   const { data, isLoading, fetchNextPage, hasNextPage } =
     useSearchMovies(debouncedSearch)
   if (isLoading) {
@@ -32,7 +33,9 @@ export const MoviesContainer = () => {
       .map((page) => page.results)
       .flat() || []
 
-  const loadOptionRequired = movies.length > 0 || hasNextPage
+  if (movies.length === 0) {
+    return <p>No movies found</p>
+  }
 
   return (
     <>
@@ -41,8 +44,10 @@ export const MoviesContainer = () => {
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </MovieCardGrid>
-      {loadOptionRequired && (
-        <Button onClick={() => fetchNextPage()}>Load More Movies</Button>
+      {hasNextPage && (
+        <Button className="mx-auto" onClick={() => fetchNextPage()}>
+          Load More Movies
+        </Button>
       )}
     </>
   )
